@@ -1,0 +1,209 @@
+var gameState = "start";
+
+var sprite = createSprite(185,383,230,20);
+sprite.visible = false;
+
+var backg = createSprite(200, 200);
+backg.setAnimation("background");
+backg.visible = false;
+backg.scale = 10;
+backg.x = backg.width /2;
+
+var player = createSprite(10, 200);
+player.setAnimation("player");
+player.visible = false;
+
+var wire1 = createSprite(400, 200);
+wire1.setAnimation("barb01");
+wire1.visible = false;
+
+var wire2 = createSprite(400, 200);
+wire2.setAnimation("barb02");
+wire2.visible = false;
+
+var wire3 = createSprite(400, 200);
+wire3.setAnimation("barb03");
+wire3.visible = false;
+
+var wire4 = createSprite(400, 200);
+wire4.setAnimation("barb04");
+wire4.visible = false;
+
+var bridge = createSprite(220, 200);
+bridge.setAnimation("bridge_fg");
+bridge.depth = 3;
+bridge.scale = 0.6;
+bridge.visible = false;
+
+var bridgebg = createSprite(220, 200);
+bridgebg.setAnimation("bridge_bg");
+bridgebg.depth = 2;
+bridgebg.scale = 0.6;
+bridgebg.visible = false;
+
+var bridge_mask = createSprite(220, 200);
+bridge_mask.setAnimation("bridge_mask");
+bridge_mask.scale = 0.6;
+bridge_mask.depth = 2;
+bridge_mask.visible = false;
+
+var river = createSprite(220, 200);
+river.setAnimation("river");
+river.scale = 0.5;
+river.depth = 1;
+river.visible = false;
+
+var bank = createSprite(220, 200);
+bank.setAnimation("bank");
+bank.scale = 0.6;
+bank.depth = 1;
+bank.visible = false;
+
+var bank_mask = createSprite(220, 200);
+bank_mask.setAnimation("bank_mask");
+bank_mask.scale = 0.6;
+bank_mask.depth = 1;
+bank_mask.visible = false;
+
+function draw() {
+  if(gameState==="start"){
+    background("white");
+    textSize(40);
+    textFont("cursive");
+    textStyle(BOLD); 
+    fill("black");
+    text("Freedom Bridge", 50, 50);
+    
+    textSize(20);
+    textFont("cursive");
+    textStyle(BOLD); 
+    fill("black");
+    text("CLICK TO CONTINUE.",75,390);
+   //Displaying the link
+    if(mouseIsOver(sprite)) {
+      fill("red");
+      text("CLICK TO CONTINUE.",75,390);
+      
+      var underline = createSprite(185,395,230,2);
+      underline.shapeColor = "red";
+      underline.lifetime = 1;
+    }
+    if(mouseDown("leftButton") && mouseIsOver(sprite)) {
+      gameState = "bar1";
+    }
+  }
+  if(gameState === "bar1"){
+    background("white");
+    backg.visible = true;
+    player.visible = true;
+    wire1.visible = true;
+    
+    sprite.visible = false;
+     if (backg.x < 0){
+      backg.x = backg.width/2;
+    }
+    if (keyWentDown("RIGHT_ARROW")) {
+      backg.velocityX = -3;
+      wire1.velocityX = -3;
+      player.velocityX = 1;
+      
+    }
+    if (keyWentUp("RIGHT_ARROW")) {
+      backg.velocityX = 0;
+      wire1.velocityX = 0;
+      player.velocityX = 0;
+    }
+    if (keyDown("up")) {
+      player.y = player.y-3;
+      
+    }
+   if (keyDown("down")) {
+      player.y = player.y+3;
+      
+    }
+  }
+    if (player.isTouching(wire1)) {
+      gameState = "bar2";
+      
+    }
+    if(gameState === "bar2"){
+    wire2.visible = true;
+    sprite.visible = false;
+     if (backg.x < 0){
+      backg.x = backg.width/2;
+    }
+    if (keyWentDown("RIGHT_ARROW")) {
+      backg.velocityX = -2;
+      wire2.velocityX = -1;
+      wire1.velocityX = -3;
+      player.velocityX = 0.7;
+      
+    }
+    if (keyWentUp("RIGHT_ARROW")) {
+      backg.velocityX = 0;
+      wire2.velocityX = 0;
+      wire1.velocityX = 0;
+      player.velocityX = 0;
+    }
+    if (keyDown("up")) {
+      player.y = player.y-3;
+      
+    }
+   if (keyDown("down")) {
+      player.y = player.y+3;
+      
+    }
+    if (player.isTouching(wire2)) {
+      gameState = "bar3";
+      player.x = 20;
+
+      
+    }
+  }
+   if(gameState === "bar3"){
+    wire3.visible = true;
+    sprite.visible = false;
+    wire2.destroy();
+    
+     if (backg.x < 0){
+      backg.x = backg.width/2;
+      
+    }
+    if (keyWentDown("RIGHT_ARROW")) {
+      backg.velocityX = -2;
+      wire3.velocityX = -1;
+      player.velocityX = 0.7;
+      
+    }
+    if (keyWentUp("RIGHT_ARROW")) {
+      backg.velocityX = 0;
+      wire3.velocityX = 0;
+      player.velocityX = 0;
+    }
+    if (keyDown("up")) {
+      player.y = player.y-3;
+      
+    }
+   if (keyDown("down")) {
+      player.y = player.y+3;
+      
+    }
+
+    if (player.isTouching(wire3)) {
+      gameState = "bridge";
+      player.x = 20;
+
+    }
+  }
+  if(gameState === "bridge"){
+    wire3.destroy();
+    river.visible = true;
+    bank.visible = true;
+    bank_mask.visible = true;
+    bridgebg.visible = true;
+    bridge_mask.visible = true;
+    bridge.visible = true;
+  }
+  
+  drawSprites();
+}
